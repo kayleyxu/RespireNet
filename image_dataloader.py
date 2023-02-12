@@ -73,7 +73,7 @@ class image_loader(Dataset):
         self.hop = self.nfft//2
         self.f_max = 2000
 
-        self.dump_images = True
+        self.dump_images = False
         self.filenames_with_labels = []
         
         # get individual breathing cycles from each audio file

@@ -86,7 +86,6 @@ def get_score(hits, counts, pflag=False):
     
 class Trainer:
     def __init__(self):
-        self.dump_images = False
         self.args = args
         mean, std = get_mean_and_std(image_loader(self.args.data_dir, self.args.folds_file,
             self.args.test_fold, True, "Params_json", Compose([ToTensor()]), stetho_id=self.args.stetho_id))
@@ -97,10 +96,17 @@ class Trainer:
                 True, "params_json", self.input_transform, stetho_id=self.args.stetho_id, aug_scale=self.args.aug_scale)
         test_dataset = image_loader(self.args.data_dir, self.args.folds_file, self.args.test_fold, 
                 False, "params_json", self.input_transform, stetho_id=self.args.stetho_id)
+
+        train_dataset.dump_images = True
+        for data in train_dataset:
+            pass
+        train_dataset.dump_images = False
+        test_dataset.dump_images = True
+        for data in test_dataset:
+            pass
+        test_dataset.dump_images = False
         self.test_ids = np.array(test_dataset.identifiers)
         self.test_paths = test_dataset.filenames_with_labels
-
-        self.dump_images = True
         # loading checkpoint
         self.net = model(num_classes=4).cuda()
         if self.args.checkpoint is not None:
